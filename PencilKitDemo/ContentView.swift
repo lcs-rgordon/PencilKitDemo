@@ -16,6 +16,7 @@ struct ContentView: View {
     @State var drawing = true
     @State var color: Color = .red
     @State var type: PKInkingTool.InkType = .pen
+    @State var isColorPickerSheetViewShowing: Bool = false
     
     var body: some View {
         
@@ -23,7 +24,6 @@ struct ContentView: View {
             
             CanvasView(canvas: $canvas, drawing: $drawing, type: $type, color: $color)
                 .font(Font.system(size: 35.0))
-            
                 .foregroundStyle(Color.purple)
                 .toolbar {
                     Button(action: {
@@ -40,6 +40,17 @@ struct ContentView: View {
                             .font(.headline)
                             .foregroundStyle(drawing ? Color.gray: Color.blue)
                     }
+                    Button(action: {
+                        isColorPickerSheetViewShowing = true
+                    }, label: {
+                        Image(systemName: "paintpalette.fill")
+                            .font(.headline)
+                    })
+                }
+                .sheet(isPresented: $isColorPickerSheetViewShowing) {
+                    ColorPicker("Pick a Color", selection: $color)
+                        .padding()
+                        .presentationDetents([.fraction(0.10)])
                 }
                 .navigationTitle("Pencil Demo")
         }
